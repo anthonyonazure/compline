@@ -12,18 +12,36 @@ import sqlite3
 
 DEFAULT_LIMIT = 6
 
+# Compact English stopword list. Tuned for the question→FTS5 path: focuses on
+# high-frequency words that drown out content terms in BM25 scoring. NOT a
+# linguistic stopword list — keeps words like "no" / "not" because negations
+# can be load-bearing in retrieval.
+STOPWORDS = frozenset(
+    """
+    the and you your yours yourself yourselves did does done has have having
+    had was were been being are was were what when where why how who whom which
+    that this those these them they their theirs there here from with into onto
+    upon about above below over under again further then once also too very can
+    will would could should may might must shall ought
+    a an as at be by do for if in is it of on or so to up
+    """.split()
+)
+
 
 def _fts_query(question: str) -> str:
-    """Strip punctuation, OR the remaining keyword tokens.
+    """Strip punctuation, drop stopwords, OR the remaining content tokens.
 
-    Conservative tokenization for v0.1 — FTS5 handles stemming.
-    Words shorter than 3 chars are dropped to avoid common-word noise.
+    FTS5 handles stemming via the porter tokenizer; we only need to keep the
+    content words. Without stopword filtering, BM25 picks up generic noise
+    (the/and/you/did) and outranks chunks that match the actual concept.
     """
     tokens = re.findall(r"[A-Za-z][A-Za-z\-']+", question)
-    keywords = [t.lower() for t in tokens if len(t) >= 3]
+    keywords = [t.lower() for t in tokens if len(t) >= 3 and t.lower() not in STOPWORDS]
+    if not keywords:
+        # Fall back to all >=3-char tokens so we never produce an empty query.
+        keywords = [t.lower() for t in tokens if len(t) >= 3]
     if not keywords:
         return question
-    # Quote each token to disable FTS5 syntax interpretation, then OR.
     return " OR ".join(f'"{k}"' for k in keywords)
 
 
