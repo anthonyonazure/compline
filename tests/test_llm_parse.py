@@ -42,7 +42,7 @@ def test_truncated_mid_citation():
     a citation quote. Outer braces never close, last quote is unterminated.
     Expected: salvage the answer + every COMPLETE citation entry."""
     raw = (
-        '{\n'
+        "{\n"
         '  "answer": "The taxing power must be unqualified because requisitions failed.",\n'
         '  "citations": [\n'
         '    {"chunk_id": 191, "quote": "A government ought to contain in itself"},\n'
@@ -82,7 +82,7 @@ def test_escaped_quotes_in_quote_string():
     )
     p = _parse_cited(raw)
     assert len(p.citations) == 1
-    assert 'energy in the executive' in p.citations[0]["quote"]
+    assert "energy in the executive" in p.citations[0]["quote"]
 
 
 def test_completely_unparseable_returns_raw_as_answer():

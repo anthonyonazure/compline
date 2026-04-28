@@ -78,13 +78,13 @@ def ask_with_citations(
 # truncated JSON array. Tolerates either field-order, escaped quotes in the
 # quote string, and arbitrary whitespace.
 _CITATION_RE = re.compile(
-    r'\{\s*'
-    r'(?:'
+    r"\{\s*"
+    r"(?:"
     r'"chunk_id"\s*:\s*(?P<id1>\d+)\s*,\s*"quote"\s*:\s*"(?P<q1>(?:[^"\\]|\\.)*)"'
-    r'|'
+    r"|"
     r'"quote"\s*:\s*"(?P<q2>(?:[^"\\]|\\.)*)"\s*,\s*"chunk_id"\s*:\s*(?P<id2>\d+)'
-    r')'
-    r'\s*\}',
+    r")"
+    r"\s*\}",
     re.DOTALL,
 )
 _ANSWER_RE = re.compile(

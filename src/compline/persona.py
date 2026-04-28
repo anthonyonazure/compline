@@ -18,7 +18,7 @@ the system prompt at session start.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 
@@ -83,7 +83,7 @@ def append_margin(margin_path: Path, entry: str) -> None:
     entry = entry.strip()
     if not entry:
         return
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
     block = f"\n## {today}\n\n{entry}\n"
     if not margin_path.exists():
         header = (

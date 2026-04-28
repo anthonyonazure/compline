@@ -29,17 +29,21 @@ def test_retrieve_prefers_content_match_over_stopword_noise(tmp_path):
     a = tmp_path / "a.md"
     a.write_text(
         "---\nauthor: HAMILTON\n---\n\n# A\n\n"
-        + ("Energy in the executive is a leading character in the definition of good "
-           "government. Decision, activity, secrecy, and despatch will generally "
-           "characterize the proceedings of one man. " * 3),
+        + (
+            "Energy in the executive is a leading character in the definition of good "
+            "government. Decision, activity, secrecy, and despatch will generally "
+            "characterize the proceedings of one man. " * 3
+        ),
         encoding="utf-8",
     )
     b = tmp_path / "b.md"
     b.write_text(
         "---\nauthor: HAMILTON\n---\n\n# B\n\n"
-        + ("This is a generic essay about other matters. The text references "
-           "many common words that you would expect in any document. "
-           "Did this concern the writer at the time? It did not. " * 3),
+        + (
+            "This is a generic essay about other matters. The text references "
+            "many common words that you would expect in any document. "
+            "Did this concern the writer at the time? It did not. " * 3
+        ),
         encoding="utf-8",
     )
     conn = connect(tmp_path / "c.db")
