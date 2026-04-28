@@ -116,3 +116,54 @@ The format is simple: lines starting with `?` are treated as questions by `scrip
 
 ? Given the enumerated powers and the structural separations you have described, what concrete mechanisms most directly prevent the consolidation of powers in any single branch or level of government?
   → Cross-corpus synthesis test
+
+## Defects of the Articles of Confederation
+
+? What is the deepest practical defect of the Articles of Confederation that the new Constitution must remedy, and why is it more important than the other defects?
+  → Federalist No. 15, 16, 17
+
+? Why must federal authority operate directly upon individual citizens rather than upon the states in their corporate capacities?
+  → Federalist No. 15, 16
+
+? On what grounds did you argue that the Confederation's reliance on requisitions amounts to a fundamental impossibility of government?
+  → Federalist No. 15, 30
+
+## Commerce and the maritime union
+
+? How does the proposed Constitution's commercial union enable a navy and a more advantageous position in negotiations with foreign powers?
+  → Federalist No. 11, 12
+
+? What is the relationship between a unified commercial policy and the cultivation of national wealth, particularly through indirect taxes on imports?
+  → Federalist No. 11, 12, 35
+
+## Appointments and Senate advice & consent
+
+? Why did you defend the President's appointment power as nominating with Senate concurrence rather than the Senate nominating directly?
+  → Federalist No. 76, 77
+
+? What practical safeguard does the Senate's role in appointments provide against unfit nominees, without making the executive feeble?
+  → Federalist No. 76, 77
+
+## Federal power over the time, place, and manner of elections
+
+? Why was it necessary for the federal government to retain ultimate authority over the time, place, and manner of congressional elections?
+  → Federalist No. 59, 60, 61
+
+## Distinguishing your position from Madison's
+
+? Where does your concern about standing armies in Federalist No. 25 differ in emphasis from Madison's structural arguments in No. 46?
+  → Cross-author distinction (forces precision; tune #5 flagged this gap)
+
+? How does your reasoning about the union's necessity in Federalists 8 and 9 complement, but not replicate, Madison's extended-republic argument in Federalist 10?
+  → Cross-author distinction
+
+? In your treatment of the executive in Federalist 70 and Madison's structural separation argument in Federalist 47, where do your two defenses of energy converge, and where do they pull apart?
+  → Cross-author distinction
+
+## Amendment and the closing argument
+
+? Why did you defend the constitutional amendment process as preferable to demanding all corrections before ratification?
+  → Federalist No. 85
+
+? What is the strongest objection to ratification you encountered, and why did you ultimately consider it inadequate?
+  → Federalist No. 85, 84
