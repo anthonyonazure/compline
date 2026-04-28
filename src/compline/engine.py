@@ -176,15 +176,23 @@ def _summarize_turns(turns: list[sqlite3.Row]) -> str:
 
 
 def _calibration_score(turns: list[sqlite3.Row]) -> float:
-    """Headline metric for the chart. Mean citation validity rate."""
-    rates = []
-    for t in turns:
-        total = t["cite_total"] or 0
-        if total == 0:
-            rates.append(0.0)
-        else:
-            rates.append(t["cite_valid"] / total)
+    """Headline metric for the chart. Mean citation validity rate over turns
+    that produced any citations.
+
+    Turns with cite_total=0 (refusal-to-fabricate, retrieval miss, parse
+    failure) are excluded from this metric — they don't represent a citation
+    quality signal one way or the other. Their frequency is tracked
+    separately as ``no_citation_rate`` in the metrics dict so the OODA can
+    still see and respond to them.
+    """
+    rates = [t["cite_valid"] / t["cite_total"] for t in turns if t["cite_total"]]
     return sum(rates) / len(rates) if rates else 0.0
+
+
+def _no_citation_rate(turns: list[sqlite3.Row]) -> float:
+    if not turns:
+        return 0.0
+    return sum(1 for t in turns if not t["cite_total"]) / len(turns)
 
 
 def _coverage_metrics(conn: sqlite3.Connection, persona_id: int, corpus: str) -> dict:
@@ -218,6 +226,7 @@ def tune(conn: sqlite3.Connection, spec_path) -> dict:
     metrics = {
         "turns_processed": len(turns),
         "calibration_score": round(score, 3),
+        "no_citation_rate": round(_no_citation_rate(turns), 3),
         **coverage,
     }
     summary = _summarize_turns(turns)
