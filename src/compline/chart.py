@@ -83,8 +83,8 @@ def render_calibration_svg(history: list[dict], title: str = "Calibration over n
     )
     parts.append(
         f'<text x="{_PAD_L}" y="46" font-size="11" fill="{_MUTED_COLOR}">'
-        f'compline · mean citation validity per tune run · {n} run{"s" if n != 1 else ""}'
-        f'</text>'
+        f"compline · mean citation validity per tune run · {n} run{'s' if n != 1 else ''}"
+        f"</text>"
     )
 
     # Y-axis grid + labels (0.0, 0.25, 0.5, 0.75, 1.0)
@@ -111,7 +111,7 @@ def render_calibration_svg(history: list[dict], title: str = "Calibration over n
     parts.append(
         f'<text transform="translate(16 {(y0 + y1) / 2:.1f}) rotate(-90)" '
         f'font-size="11" fill="{_MUTED_COLOR}" text-anchor="middle">'
-        f'calibration score</text>'
+        f"calibration score</text>"
     )
 
     if n == 0:
@@ -123,7 +123,9 @@ def render_calibration_svg(history: list[dict], title: str = "Calibration over n
         return "".join(parts)
 
     # Data line
-    points = [(_x_for_index(i, n), _y_for_score(h["calibration_score"])) for i, h in enumerate(history)]
+    points = [
+        (_x_for_index(i, n), _y_for_score(h["calibration_score"])) for i, h in enumerate(history)
+    ]
     if n >= 2:
         path = "M " + " L ".join(f"{px:.1f} {py:.1f}" for px, py in points)
         parts.append(
@@ -132,7 +134,7 @@ def render_calibration_svg(history: list[dict], title: str = "Calibration over n
         )
 
     # Points + value labels
-    for (px, py), h in zip(points, history):
+    for (px, py), h in zip(points, history, strict=True):
         parts.append(
             f'<circle cx="{px:.1f}" cy="{py:.1f}" r="5" '
             f'fill="{_POINT_FILL}" stroke="{_POINT_STROKE}" stroke-width="2"/>'
@@ -142,7 +144,7 @@ def render_calibration_svg(history: list[dict], title: str = "Calibration over n
         parts.append(
             f'<text x="{px:.1f}" y="{label_y:.1f}" font-size="11" '
             f'font-weight="600" fill="{_TEXT_COLOR}" text-anchor="middle">'
-            f'{h["calibration_score"]:.2f}</text>'
+            f"{h['calibration_score']:.2f}</text>"
         )
 
     # X-axis tick labels (date for each run; if too dense, every other)
@@ -154,12 +156,12 @@ def render_calibration_svg(history: list[dict], title: str = "Calibration over n
         parts.append(
             f'<text x="{px:.1f}" y="{y1 + 18:.1f}" font-size="10" '
             f'fill="{_MUTED_COLOR}" text-anchor="middle">'
-            f'{escape(_format_date(h["ran_at"]))}</text>'
+            f"{escape(_format_date(h['ran_at']))}</text>"
         )
         parts.append(
             f'<text x="{px:.1f}" y="{y1 + 32:.1f}" font-size="9" '
             f'fill="{_MUTED_COLOR}" text-anchor="middle">'
-            f'{h["turns_processed"]} turn{"s" if h["turns_processed"] != 1 else ""}</text>'
+            f"{h['turns_processed']} turn{'s' if h['turns_processed'] != 1 else ''}</text>"
         )
 
     parts.append("</svg>")

@@ -17,14 +17,96 @@ DEFAULT_LIMIT = 6
 # linguistic stopword list — keeps words like "no" / "not" because negations
 # can be load-bearing in retrieval.
 STOPWORDS = frozenset(
-    """
-    the and you your yours yourself yourselves did does done has have having
-    had was were been being are was were what when where why how who whom which
-    that this those these them they their theirs there here from with into onto
-    upon about above below over under again further then once also too very can
-    will would could should may might must shall ought
-    a an as at be by do for if in is it of on or so to up
-    """.split()
+    {
+        # pronouns + articles + common determiners
+        "the",
+        "and",
+        "you",
+        "your",
+        "yours",
+        "yourself",
+        "yourselves",
+        "them",
+        "they",
+        "their",
+        "theirs",
+        "there",
+        "here",
+        "this",
+        "that",
+        "these",
+        "those",
+        "which",
+        "who",
+        "whom",
+        # auxiliaries + copulas
+        "did",
+        "does",
+        "done",
+        "has",
+        "have",
+        "having",
+        "had",
+        "was",
+        "were",
+        "been",
+        "being",
+        "are",
+        "can",
+        "will",
+        "would",
+        "could",
+        "should",
+        "may",
+        "might",
+        "must",
+        "shall",
+        "ought",
+        # interrogatives
+        "what",
+        "when",
+        "where",
+        "why",
+        "how",
+        # prepositions
+        "from",
+        "with",
+        "into",
+        "onto",
+        "upon",
+        "about",
+        "above",
+        "below",
+        "over",
+        "under",
+        # adverbs that survive the >=3-char filter
+        "again",
+        "further",
+        "then",
+        "once",
+        "also",
+        "too",
+        "very",
+        # short function words
+        "a",
+        "an",
+        "as",
+        "at",
+        "be",
+        "by",
+        "do",
+        "for",
+        "if",
+        "in",
+        "is",
+        "it",
+        "of",
+        "on",
+        "or",
+        "so",
+        "to",
+        "up",
+    }
 )
 
 

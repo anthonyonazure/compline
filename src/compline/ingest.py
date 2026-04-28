@@ -109,9 +109,7 @@ def _is_corpus_file(path: Path) -> bool:
     name = path.name
     if name in SKIP_FILENAMES:
         return False
-    if name.endswith(".persona.md") or name.endswith(".margin.md"):
-        return False
-    return True
+    return not (name.endswith(".persona.md") or name.endswith(".margin.md"))
 
 
 def ingest_directory(conn: sqlite3.Connection, directory: Path, corpus: str) -> int:

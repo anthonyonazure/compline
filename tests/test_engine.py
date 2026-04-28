@@ -17,12 +17,10 @@ def _seed_corpus(tmp_path):
     f.write_text(
         "---\nauthor: HAMILTON\n---\n\n# Federalist No. 70\n\n"
         + "Energy in the executive is a leading character in the definition of good government. "
-        + "It is essential to the protection of the community against foreign attacks. "
-        * 4
+        + "It is essential to the protection of the community against foreign attacks. " * 4
         + "\n\n"
         + "A feeble executive implies a feeble execution of the government. "
-        + "A feeble execution is but another phrase for a bad execution. "
-        * 4,
+        + "A feeble execution is but another phrase for a bad execution. " * 4,
         encoding="utf-8",
     )
     p = tmp_path / "Hamilton.persona.md"
@@ -112,9 +110,9 @@ def test_tune_writes_margin_and_marks_turns(tmp_path, monkeypatch):
     assert margin_path.exists()
     assert "Federalist 70" in margin_path.read_text(encoding="utf-8")
 
-    untuned = conn.execute(
-        "SELECT COUNT(*) AS n FROM turns WHERE tuned_in_run IS NULL"
-    ).fetchone()["n"]
+    untuned = conn.execute("SELECT COUNT(*) AS n FROM turns WHERE tuned_in_run IS NULL").fetchone()[
+        "n"
+    ]
     assert untuned == 0
 
 

@@ -20,16 +20,18 @@ def test_merge_respects_minimum():
 
 def test_chunk_file_extracts_title_and_author(tmp_path):
     f = tmp_path / "f-no-1.md"
+    para1 = (
+        "After an unequivocal experience of the inefficacy of the subsisting "
+        "federal government, you are called upon to deliberate on a new "
+        "constitution for the United States of America. "
+    )
+    para2 = (
+        "The subject speaks its own importance, comprehending in its "
+        "consequences nothing less than the existence of the union, the "
+        "safety and welfare of the parts of which it is composed. "
+    )
     f.write_text(
-        "---\nauthor: HAMILTON\n---\n\n"
-        "# Federalist No. 1\n\n"
-        + ("After an unequivocal experience of the inefficacy of the subsisting federal government, "
-           "you are called upon to deliberate on a new constitution for the United States of America. "
-           * 5)
-        + "\n\n"
-        + ("The subject speaks its own importance, comprehending in its consequences nothing less "
-           "than the existence of the union, the safety and welfare of the parts of which it is "
-           "composed. " * 5),
+        "---\nauthor: HAMILTON\n---\n\n# Federalist No. 1\n\n" + (para1 * 5) + "\n\n" + (para2 * 5),
         encoding="utf-8",
     )
     chunks = chunk_file(f, corpus="federalist")
@@ -41,7 +43,8 @@ def test_chunk_file_extracts_title_and_author(tmp_path):
 
 def test_ingest_skips_metadata_files(tmp_path):
     (tmp_path / "Hamilton.persona.md").write_text(
-        "---\ncorpus: federalist\n---\n\nYou are Hamilton.", encoding="utf-8",
+        "---\ncorpus: federalist\n---\n\nYou are Hamilton.",
+        encoding="utf-8",
     )
     (tmp_path / "Hamilton.margin.md").write_text("# margin\n\nlesson", encoding="utf-8")
     (tmp_path / "README.md").write_text("# README\n\ndocs", encoding="utf-8")
@@ -62,8 +65,10 @@ def test_ingest_directory_populates_fts(tmp_path):
     f = tmp_path / "x.md"
     f.write_text(
         "---\nauthor: HAMILTON\n---\n\n# Test\n\n"
-        + ("Energy in the executive is a leading character in the definition of good government. "
-           * 10),
+        + (
+            "Energy in the executive is a leading character in the definition of good government. "
+            * 10
+        ),
         encoding="utf-8",
     )
     conn = connect(tmp_path / "c.db")

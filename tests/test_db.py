@@ -10,9 +10,12 @@ def test_schema_initializes_idempotently(tmp_path):
     conn = connect(db)
     init_schema(conn)
     init_schema(conn)
-    tables = {r["name"] for r in conn.execute(
-        "SELECT name FROM sqlite_master WHERE type IN ('table','view')"
-    ).fetchall()}
+    tables = {
+        r["name"]
+        for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type IN ('table','view')"
+        ).fetchall()
+    }
     for required in {"chunks", "chunks_fts", "personas", "turns", "citations", "tune_runs"}:
         assert required in tables, f"missing {required} in {tables}"
 
@@ -23,8 +26,14 @@ def test_fts5_round_trip(tmp_path):
     conn.execute(
         "INSERT INTO chunks (corpus, source, ordinal, title, author, text) "
         "VALUES (?, ?, ?, ?, ?, ?)",
-        ("federalist", "f-no-1.md", 0, "Federalist No. 1", "HAMILTON",
-         "Energy in the executive is a leading character in the definition of good government."),
+        (
+            "federalist",
+            "f-no-1.md",
+            0,
+            "Federalist No. 1",
+            "HAMILTON",
+            "Energy in the executive is a leading character in the definition of good government.",
+        ),
     )
     conn.commit()
     rows = conn.execute(

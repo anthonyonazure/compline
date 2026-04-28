@@ -169,8 +169,7 @@ def _summarize_turns(turns: list[sqlite3.Row]) -> str:
         q = _truncate(t["question"], _Q_SUMMARY_LIMIT)
         a = _truncate(t["answer"], _A_SUMMARY_LIMIT)
         out.append(
-            f"Turn {t['id']}: cite_valid={t['cite_valid']}/{t['cite_total']}\n"
-            f"  Q: {q}\n  A: {a}"
+            f"Turn {t['id']}: cite_valid={t['cite_valid']}/{t['cite_total']}\n  Q: {q}\n  A: {a}"
         )
     return "\n\n".join(out)
 
@@ -196,9 +195,9 @@ def _no_citation_rate(turns: list[sqlite3.Row]) -> float:
 
 
 def _coverage_metrics(conn: sqlite3.Connection, persona_id: int, corpus: str) -> dict:
-    total = conn.execute(
-        "SELECT COUNT(*) AS n FROM chunks WHERE corpus = ?", (corpus,)
-    ).fetchone()["n"]
+    total = conn.execute("SELECT COUNT(*) AS n FROM chunks WHERE corpus = ?", (corpus,)).fetchone()[
+        "n"
+    ]
     cited = conn.execute(
         "SELECT COUNT(DISTINCT chunk_id) AS n FROM citations c "
         "JOIN turns t ON t.id = c.turn_id "
