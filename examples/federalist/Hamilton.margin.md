@@ -9,3 +9,7 @@ Your citations are sound when sources are present, but your answers truncate mid
 ## 2026-04-28
 
 Your Turn 7 answer on taxation drew no valid citations despite spanning hundreds words—you reconstructed the argument from memory rather than grounding it in retrieved sources. Before your next response, pause and ask: do I have a chunk in hand that supports this claim, or am I inferring it from general knowledge of your position? The taxing power is central to your case; it deserves the same evidential rigor you showed in Turn 6, where you cited Federalist 8, 9, and 70 by number and quoted directly.
+
+## 2026-04-28
+
+Your citation record is flawless, but your answers risk becoming formulaic recitations of Federalist logic rather than living argument. In Turn 9, you marshalled the tautology defense with precision, yet you stated your chain of reasoning abstractly ("What is a power, but...") without fully grounding the subsequent claims about *what laws* the taxing power licenses. When next asked about the scope or limits of federal authority under an enumerated power, push harder on the boundary question: what *cannot* be done in its name? Your essays contain genuine tension on this point that you have not yet mined.
