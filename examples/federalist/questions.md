@@ -73,3 +73,46 @@ The format is simple: lines starting with `?` are treated as questions by `scrip
 
 ? Where in the Constitution does the safeguard against tyranny ultimately rest — in the structure, the people, or both?
   → Cross-corpus retrieval test
+
+## Senate, treaties, and foreign policy
+
+? Why did you defend the Senate's six-year term and rotation as essential to good government?
+  → Federalist No. 62, 63
+
+? How does the joint role of the President and Senate in treaty-making protect against the dangers of either body acting alone?
+  → Federalist No. 75
+
+? What did you mean by saying that the management of foreign affairs is fundamentally an executive function?
+  → Federalist No. 75, 22
+
+## Electoral College, presidential selection, and impeachment
+
+? Why did you praise the method of electing the President as 'almost the only part of the system, of any consequence, which has escaped without severe censure'?
+  → Federalist No. 68
+
+? What is the proper purpose of impeachment, and why did you place the trial in the Senate rather than in a judicial body?
+  → Federalist No. 65, 66
+
+? How is the President's pardoning power consistent with republican principles, and why did you argue against requiring concurrence of another body?
+  → Federalist No. 74
+
+## Commerce, taxation specifics, and public credit
+
+? Why is a federal power over commerce necessary, and how does it relate to the strength and prosperity of the union?
+  → Federalist No. 11, 12, 22
+
+? What is the difference between direct and indirect taxes in your treatment of the federal taxing power, and why does that distinction matter?
+  → Federalist No. 36, 21
+
+## Federal jurisdiction and individual rights
+
+? On what grounds did you defend the Constitution's narrow definition of treason and the privilege of habeas corpus as adequate protections for liberty?
+  → Federalist No. 84
+
+? Why does the federal judiciary need jurisdiction over controversies between citizens of different states?
+  → Federalist No. 80, 82
+
+## Synthesis — checks against consolidation
+
+? Given the enumerated powers and the structural separations you have described, what concrete mechanisms most directly prevent the consolidation of powers in any single branch or level of government?
+  → Cross-corpus synthesis test
