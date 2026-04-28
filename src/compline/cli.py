@@ -16,8 +16,9 @@ import os
 from pathlib import Path
 
 from compline import __version__
+from compline.chart import render_calibration_svg
 from compline.db import connect, init_schema
-from compline.engine import ask, history_json, tune
+from compline.engine import ask, history, history_json, tune
 from compline.ingest import ingest_directory
 
 
@@ -84,6 +85,20 @@ def cmd_history(args) -> int:
     return 0
 
 
+def cmd_chart(args) -> int:
+    conn = connect(_db_path(args))
+    init_schema(conn)
+    rows = history(conn, args.persona)
+    conn.close()
+    title = args.title or f"{args.persona} — calibration over nights"
+    svg = render_calibration_svg(rows, title=title)
+    out = Path(args.output).expanduser()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(svg, encoding="utf-8")
+    print(f"wrote {out} ({len(rows)} run{'s' if len(rows) != 1 else ''})")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="compline",
@@ -115,6 +130,24 @@ def build_parser() -> argparse.ArgumentParser:
     p_hist = sub.add_parser("history", help="print tune-run history as JSON")
     p_hist.add_argument("persona", help="persona name")
     p_hist.set_defaults(func=cmd_history)
+
+    p_chart = sub.add_parser(
+        "chart",
+        help="render calibration chart as SVG (the W2 launch hero artifact)",
+    )
+    p_chart.add_argument("persona", help="persona name")
+    p_chart.add_argument(
+        "--output",
+        "-o",
+        default="chart.svg",
+        help="output path (default: chart.svg in current dir)",
+    )
+    p_chart.add_argument(
+        "--title",
+        default=None,
+        help="chart title (default: '<persona> — calibration over nights')",
+    )
+    p_chart.set_defaults(func=cmd_chart)
 
     return parser
 
