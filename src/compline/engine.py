@@ -148,12 +148,26 @@ def _untuned_turns(conn: sqlite3.Connection, persona_id: int) -> list[sqlite3.Ro
     ).fetchall()
 
 
+_Q_SUMMARY_LIMIT = 300
+_A_SUMMARY_LIMIT = 1800
+
+
+def _truncate(text: str, limit: int) -> str:
+    """Return ``text`` capped at ``limit`` chars; mark truncation explicitly so the
+    OODA LLM does not mistake the limit for a persona behavior."""
+    if text is None:
+        return ""
+    if len(text) <= limit:
+        return text
+    return text[:limit].rstrip() + " [...truncated by tooling for summary length...]"
+
+
 def _summarize_turns(turns: list[sqlite3.Row]) -> str:
-    """Compact summary fed to the OODA LLM call. Truncates per turn to keep cost low."""
+    """Compact summary fed to the OODA LLM call. Marks truncation explicitly."""
     out = []
     for t in turns:
-        q = t["question"][:200]
-        a = t["answer"][:400]
+        q = _truncate(t["question"], _Q_SUMMARY_LIMIT)
+        a = _truncate(t["answer"], _A_SUMMARY_LIMIT)
         out.append(
             f"Turn {t['id']}: cite_valid={t['cite_valid']}/{t['cite_total']}\n"
             f"  Q: {q}\n  A: {a}"

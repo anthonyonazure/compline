@@ -37,6 +37,15 @@ def _seed_corpus(tmp_path):
     return conn, p
 
 
+def test_truncate_marks_summary_artifact():
+    short = "this is a short answer"
+    assert engine._truncate(short, 100) == short
+    long = "x" * 2500
+    truncated = engine._truncate(long, 1800)
+    assert len(truncated) <= 1800 + 50  # allow marker overhead
+    assert "truncated by tooling" in truncated
+
+
 def test_validate_citation_substring():
     chunk = "Energy in the executive is a leading character in the definition of good government."
     assert engine._validate_citation("energy in the executive", chunk) is True
