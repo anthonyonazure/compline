@@ -30,6 +30,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from compline.db import connect, init_schema  # noqa: E402
 from compline.engine import ask  # noqa: E402
+from compline.persona import load_spec  # noqa: E402
 
 _QUESTION_RE = re.compile(r"^\?\s*(.+)$")
 
@@ -55,10 +56,15 @@ def already_asked(conn, persona_id: int, question: str) -> bool:
 
 
 def persona_id_for(conn, persona_path: Path) -> int | None:
-    """Look up an existing persona row by spec_path. Returns None if unseen."""
-    row = conn.execute(
-        "SELECT id FROM personas WHERE spec_path = ?", (str(persona_path),)
-    ).fetchone()
+    """Look up an existing persona row by NAME parsed from the spec.
+
+    Looking up by spec_path is brittle because the path may have been stored
+    as relative on first ask (running ``compline ask examples/...``) and is
+    resolved to absolute when the script runs. Name is the stable identifier
+    that ``engine._ensure_persona_row`` also uses.
+    """
+    spec = load_spec(persona_path)
+    row = conn.execute("SELECT id FROM personas WHERE name = ?", (spec.name,)).fetchone()
     return row["id"] if row else None
 
 
