@@ -15,7 +15,9 @@ import re
 from dataclasses import dataclass
 
 DEFAULT_MODEL = os.environ.get("COMPLINE_MODEL", "claude-haiku-4-5-20251001")
-ASK_MAX_TOKENS = 1024
+# Rich answers + several long citations easily exceed 1024 tokens.
+# 4096 leaves headroom while still capping cost predictably.
+ASK_MAX_TOKENS = 4096
 TUNE_MAX_TOKENS = 400
 
 
@@ -72,32 +74,108 @@ def ask_with_citations(
     return _parse_cited(raw)
 
 
-def _parse_cited(raw: str) -> CitedAnswer:
-    text = raw.strip()
-    # Tolerate code fences.
+# Matches a complete {"chunk_id": N, "quote": "..."} object even inside a
+# truncated JSON array. Tolerates either field-order, escaped quotes in the
+# quote string, and arbitrary whitespace.
+_CITATION_RE = re.compile(
+    r'\{\s*'
+    r'(?:'
+    r'"chunk_id"\s*:\s*(?P<id1>\d+)\s*,\s*"quote"\s*:\s*"(?P<q1>(?:[^"\\]|\\.)*)"'
+    r'|'
+    r'"quote"\s*:\s*"(?P<q2>(?:[^"\\]|\\.)*)"\s*,\s*"chunk_id"\s*:\s*(?P<id2>\d+)'
+    r')'
+    r'\s*\}',
+    re.DOTALL,
+)
+_ANSWER_RE = re.compile(
+    r'"answer"\s*:\s*"(?P<a>(?:[^"\\]|\\.)*)"',
+    re.DOTALL,
+)
+
+
+def _strip_fences(text: str) -> str:
+    text = text.strip()
     if text.startswith("```"):
         text = re.sub(r"^```[a-zA-Z]*\n?", "", text)
         text = re.sub(r"\n?```$", "", text)
+    return text
+
+
+def _coerce_citations(items) -> list[dict]:
+    cleaned = []
+    for c in items or []:
+        if not isinstance(c, dict) or "chunk_id" not in c or "quote" not in c:
+            continue
+        try:
+            cleaned.append({"chunk_id": int(c["chunk_id"]), "quote": str(c["quote"])})
+        except (TypeError, ValueError):
+            continue
+    return cleaned
+
+
+def _salvage(text: str, raw: str) -> CitedAnswer:
+    """Recover answer + complete citation objects from malformed/truncated JSON.
+
+    Used when the LLM hits max_tokens mid-citation, emits stray prose around
+    the JSON, or otherwise produces output json.loads cannot accept whole.
+    """
+    answer = ""
+    m = _ANSWER_RE.search(text)
+    if m:
+        try:
+            answer = json.loads('"' + m.group("a") + '"')
+        except json.JSONDecodeError:
+            answer = m.group("a")
+
+    citations: list[dict] = []
+    for cm in _CITATION_RE.finditer(text):
+        try:
+            chunk_id = int(cm.group("id1") or cm.group("id2"))
+            quote_raw = cm.group("q1") or cm.group("q2") or ""
+            try:
+                quote = json.loads('"' + quote_raw + '"')
+            except json.JSONDecodeError:
+                quote = quote_raw
+            citations.append({"chunk_id": chunk_id, "quote": quote})
+        except (ValueError, TypeError):
+            continue
+
+    if not answer and not citations:
+        # Total parse failure — surface the raw text so the user sees something.
+        return CitedAnswer(answer=text, citations=[], raw=raw)
+    return CitedAnswer(answer=answer or text, citations=citations, raw=raw)
+
+
+def _parse_cited(raw: str) -> CitedAnswer:
+    text = _strip_fences(raw)
+
+    # Fast path: clean parse.
     try:
         data = json.loads(text)
+        return CitedAnswer(
+            answer=(data.get("answer") or "").strip(),
+            citations=_coerce_citations(data.get("citations")),
+            raw=raw,
+        )
     except json.JSONDecodeError:
-        # Salvage attempt — find outermost JSON object.
-        start = text.find("{")
-        end = text.rfind("}")
-        if start == -1 or end == -1 or end <= start:
-            return CitedAnswer(answer=text, citations=[], raw=raw)
+        pass
+
+    # Second try: outermost balanced object.
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end > start:
         try:
             data = json.loads(text[start : end + 1])
+            return CitedAnswer(
+                answer=(data.get("answer") or "").strip(),
+                citations=_coerce_citations(data.get("citations")),
+                raw=raw,
+            )
         except json.JSONDecodeError:
-            return CitedAnswer(answer=text, citations=[], raw=raw)
-    answer = (data.get("answer") or "").strip()
-    citations = data.get("citations") or []
-    cleaned = [
-        {"chunk_id": int(c["chunk_id"]), "quote": str(c["quote"])}
-        for c in citations
-        if isinstance(c, dict) and "chunk_id" in c and "quote" in c
-    ]
-    return CitedAnswer(answer=answer, citations=cleaned, raw=raw)
+            pass
+
+    # Last resort: regex salvager. Handles truncated and malformed output.
+    return _salvage(text, raw)
 
 
 def generate_margin_entry(
