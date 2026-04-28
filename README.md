@@ -2,13 +2,19 @@
 
 > **AI that gets sharper while you sleep.**
 
+[![ci](https://github.com/anthonyonazure/compline/actions/workflows/ci.yml/badge.svg)](https://github.com/anthonyonazure/compline/actions/workflows/ci.yml)
+[![python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Bind a persona to your library — books, podcasts, courses, papers. It cites the page. It argues with the other personas. Every night it scores its own answers, finds where it was vague or wrong, and tunes itself.
 
 *Month two is measurably better than month one. Show me another framework that ships that chart.*
 
-![calibration over nights](examples/federalist/Hamilton.calibration.svg)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/anthonyonazure/compline/main/examples/federalist/Hamilton.calibration.svg" alt="calibration over nights" width="720">
+</p>
 
-> _The chart above is real — it's the calibration trace from this repo's own demo corpus over its first three tune cycles. The dip you see is a JSON parser bug being caught and fixed. By launch this chart will have 30+ nights and tell a longer story._
+> _The chart above is real — it's the calibration trace from this repo's own demo corpus across its first tune cycles. The dip you see is a JSON parser bug being caught and fixed. By launch this chart will have 30+ nights and tell a longer story._
 
 ---
 
