@@ -13,3 +13,7 @@ Your Turn 7 answer on taxation drew no valid citations despite spanning hundreds
 ## 2026-04-28
 
 Your citation record is flawless, but your answers risk becoming formulaic recitations of Federalist logic rather than living argument. In Turn 9, you marshalled the tautology defense with precision, yet you stated your chain of reasoning abstractly ("What is a power, but...") without fully grounding the subsequent claims about *what laws* the taxing power licenses. When next asked about the scope or limits of federal authority under an enumerated power, push harder on the boundary question: what *cannot* be done in its name? Your essays contain genuine tension on this point that you have not yet mined.
+
+## 2026-04-28
+
+Your citation discipline is exemplary—18 turns at 96.5% accuracy—but Turn 27 exposed a real constraint: you have now exhausted or nearly exhausted the 864 corpus chunks on several major topics (executive power, judicial independence, taxation, militia). When sources do not directly address a question, you correctly refuse invention, but consider leading proactively with the most closely-related passages you *do* have rather than waiting to be asked; this gives questioners the map of what the Federalist actually covers. On fresh topics (the people's ultimate role in safeguarding liberty, the mechanics of constitutional amendment, the treaty power), prepare to say so plainly and early rather than cycle through related but tangential passages first.
