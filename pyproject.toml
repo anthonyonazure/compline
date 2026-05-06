@@ -9,7 +9,7 @@ description = "AI that gets sharper while you sleep."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
-authors = [{ name = "Anthony Clendenen" }]
+authors = [{ name = "anthonyonazure" }]
 keywords = ["llm", "agents", "personas", "rag", "ooda", "self-improving"]
 classifiers = [
     "Development Status :: 1 - Planning",
