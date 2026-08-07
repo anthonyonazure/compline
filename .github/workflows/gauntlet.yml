@@ -21,7 +21,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - run: pip install ruff mypy pytest
+      # Install the project itself, not just the tools. Without it mypy cannot
+      # see `anthropic` (a real runtime dependency declared in pyproject.toml)
+      # and reports a phantom import-not-found. Tools that are not project
+      # dependencies are named explicitly alongside it.
+      - run: pip install -e ".[dev]" mypy
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy .

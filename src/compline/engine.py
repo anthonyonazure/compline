@@ -46,6 +46,21 @@ class AskResult:
     cite_total: int
 
 
+def _last_insert_id(cur: sqlite3.Cursor) -> int:
+    """Return the rowid of the row just inserted through ``cur``.
+
+    ``sqlite3.Cursor.lastrowid`` is typed ``int | None`` because it is None for
+    statements that inserted nothing (or for tables without a rowid). Every call
+    site below runs immediately after a single-row INSERT into a rowid table, so
+    None there means the driver broke its contract and the caller must not carry
+    on with a bogus foreign key.
+    """
+    rowid = cur.lastrowid
+    if rowid is None:
+        raise RuntimeError("INSERT did not return a rowid")
+    return rowid
+
+
 def _ensure_persona_row(conn: sqlite3.Connection, spec: PersonaSpec) -> int:
     row = conn.execute("SELECT id FROM personas WHERE name = ?", (spec.name,)).fetchone()
     if row:
@@ -56,7 +71,7 @@ def _ensure_persona_row(conn: sqlite3.Connection, spec: PersonaSpec) -> int:
         (spec.name, str(spec.spec_path), str(spec.margin_path), spec.corpus, spec.author_filter),
     )
     conn.commit()
-    return int(cur.lastrowid)
+    return _last_insert_id(cur)
 
 
 def _validate_citation(quote: str, chunk_text: str) -> bool:
@@ -97,7 +112,7 @@ def ask(
         return AskResult(
             answer="(no relevant sources found in corpus)",
             citations=[],
-            turn_id=int(cur.lastrowid),
+            turn_id=_last_insert_id(cur),
             cite_valid=0,
             cite_total=0,
         )
@@ -122,7 +137,7 @@ def ask(
         "VALUES (?, ?, ?, ?, ?)",
         (persona_id, question, cited.answer, cite_valid, cite_total),
     )
-    turn_id = int(cur.lastrowid)
+    turn_id = _last_insert_id(cur)
     for c in validated:
         conn.execute(
             "INSERT INTO citations (turn_id, chunk_id, quote, valid) VALUES (?, ?, ?, ?)",
@@ -243,7 +258,7 @@ def tune(conn: sqlite3.Connection, spec_path) -> dict:
         "VALUES (?, ?, ?, ?)",
         (persona_id, len(turns), score, margin_entry),
     )
-    run_id = int(cur.lastrowid)
+    run_id = _last_insert_id(cur)
     turn_ids = [t["id"] for t in turns]
     conn.executemany(
         "UPDATE turns SET tuned_in_run = ? WHERE id = ?",
